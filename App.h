@@ -9,10 +9,18 @@ class App
 public:
     App();
     void Run();
+    static const int RADIUS;
 
 private:
-    static const sf::Time TimePerFrame;
+    static const sf::Time SECS_PER_FRAME;
 
+    sf::Font mFont;
+    sf::Text	 mStatisticsText;
+    sf::Time	 mStatisticsUpdateTime;
+
+    std::size_t mStatisticsNumFrames;
+
+    void UpdateStat(sf::Time elapsedTime);
     void HandleEvents();
     void FixedUpdate(sf::Time);
     void Display();

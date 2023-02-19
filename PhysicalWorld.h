@@ -13,4 +13,7 @@ public:
     void Step(float dt);
 
     std::list<Particle> particles;
+
+private:
+    bool isPaused;
 };

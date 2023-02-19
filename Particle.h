@@ -11,11 +11,13 @@ public:
     void SetPosition(sf::Vector2f pos);
     void ApplyForce(sf::Vector2f force);
 
+    bool isMarker = false;
+
 public:
     sf::Vector2f pos;
     sf::Vector2f force;
     sf::Vector2f velocity;
+
     float invMass;
-    float mass;
     float radius;
 };

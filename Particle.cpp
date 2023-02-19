@@ -1,11 +1,10 @@
 #include "Particle.h"
 
 Particle::Particle(float mass, sf::Vector2f pos, float radius) {
-    this->mass = mass;
+    invMass = 1 / mass;
+
     this->pos = pos;
     this->radius = radius;
-
-    invMass = 1 / mass;
 }
 
 void Particle::SetPosition(sf::Vector2f pos) {
