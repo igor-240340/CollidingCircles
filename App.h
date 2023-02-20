@@ -8,26 +8,22 @@ class App
 {
 public:
     App();
+    ~App();
+
     void Run();
-    static const int RADIUS;
 
 private:
-    static const sf::Time SECS_PER_FRAME;
-
-    sf::Font mFont;
-    sf::Text	 mStatisticsText;
-    sf::Time	 mStatisticsUpdateTime;
-
-    std::size_t mStatisticsNumFrames;
-
-    void UpdateStat(sf::Time elapsedTime);
-    void HandleEvents();
-    void FixedUpdate(sf::Time);
-    void Display();
-
-    sf::RenderWindow window;
+    static const sf::Time FIXED_DELTA_TIME;
+    static const int CIRCLE_COUNT = 10;
 
     PhysicalWorld world;
 
-    sf::CircleShape shape;
+    sf::RenderWindow* window;
+    sf::CircleShape* circleShape;
+
+    void HandleInput();
+    void FixedUpdate(sf::Time dt);
+    void Render();
+
+    void FillWorldWithCircles();
 };

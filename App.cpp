@@ -2,123 +2,78 @@
 #include <cstdlib>
 #include <ctime>
 
+#include "App.h"
 #include "Particle.h"
 
-#include "App.h"
+const sf::Time App::FIXED_DELTA_TIME = sf::seconds(1.0f / 60.0f);
 
-const sf::Time App::SECS_PER_FRAME = sf::seconds(1.f / 60.f);
-const int App::RADIUS = 50;
+App::App() {
+    window = new sf::RenderWindow(sf::VideoMode(1024, 768), "Moving Circles");
+    circleShape = new sf::CircleShape();
+    circleShape->setFillColor(sf::Color::Red);
 
-App::App()
-    : window(sf::VideoMode(1024, 768), "Moving Circles")
-    , shape(RADIUS)
-    , mFont()
-    , mStatisticsText()
-    , mStatisticsUpdateTime()
-    , mStatisticsNumFrames(0)
-{
-
-    mFont.loadFromFile("Sansation.ttf");
-    mStatisticsText.setFont(mFont);
-    mStatisticsText.setPosition(5.f, 5.f);
-    mStatisticsText.setCharacterSize(20);
-    mStatisticsText.setFillColor(sf::Color::White);
-
-    //std::cout << "App::App" << std::endl;
-
-    shape.setFillColor(sf::Color::White);
+    std::srand(std::time(nullptr));
 }
 
 void App::Run() {
-    std::cout << "App::Run" << std::endl;
-
-    std::srand(std::time(nullptr));
+    FillWorldWithCircles();
 
     sf::Clock clock;
-    sf::Time sinceLastUpdate = sf::Time::Zero;
+    sf::Time dtAcc = sf::Time::Zero;
 
-    Particle p1(1, sf::Vector2f(500, 234), 10);
-    p1.velocity = sf::Vector2f(400, 0);
-    p1.isMarker = true;
-    world.AddParticle(p1);
-
-    while (window.isOpen()) {
-        sf::Time elapsedTime = clock.restart();
-        sinceLastUpdate += elapsedTime;
-        while (sinceLastUpdate > SECS_PER_FRAME) {
-            HandleEvents();
-            sinceLastUpdate -= SECS_PER_FRAME;
-            FixedUpdate(SECS_PER_FRAME);
+    while (window->isOpen()) {
+        sf::Time dt = clock.restart();
+        dtAcc += dt;
+        while (dtAcc > FIXED_DELTA_TIME) {
+            HandleInput();
+            FixedUpdate(FIXED_DELTA_TIME);
+            dtAcc -= FIXED_DELTA_TIME;
         }
 
-        UpdateStat(elapsedTime);
-        Display();
+        Render();
     }
 }
 
-void App::UpdateStat(sf::Time elapsedTime)
-{
-    mStatisticsUpdateTime += elapsedTime;
-    mStatisticsNumFrames += 1;
-
-    if (mStatisticsUpdateTime >= sf::seconds(1.0f))
-    {
-        mStatisticsText.setString(
-            "Frames / Second = " + std::to_string(mStatisticsNumFrames) + "\n" +
-            "Time / Update = " + std::to_string(mStatisticsUpdateTime.asMicroseconds() / mStatisticsNumFrames) + "us");
-
-        mStatisticsUpdateTime -= sf::seconds(1.0f);
-        mStatisticsNumFrames = 0;
-    }
-}
-
-void App::HandleEvents() {
+void App::HandleInput() {
     sf::Event event;
-    while (window.pollEvent(event)) {
+
+    while (window->pollEvent(event)) {
         if (event.type == sf::Event::Closed)
-            window.close();
+            window->close();
 
-        if (event.type == sf::Event::KeyReleased)
-        {
-            //Particle p2(1, sf::Vector2f(512, 384), 10);
-
-            //p2.velocity = sf::Vector2f(100, 300);
-
-            //world.AddParticle(p2);
-
-            for (int i = 0; i < 5; i++) {
-                int angleDeg = std::rand() % 180;
-                float angleRad = angleDeg * (3.14 / 180);
-                float magnitude = std::rand() % 1000 + 1;
-                sf::Vector2f randVel = { cos(angleRad), sin(angleRad) };
-                randVel = randVel * magnitude;
-                sf::Vector2f randPos;
-                randPos.x = std::rand() % 1024;
-                randPos.y = std::rand() % 768;
-
-                Particle p1(1, randPos, 1);
-                p1.velocity = randVel;
-                world.AddParticle(p1);
-            }
-        }
+        //if (event.type == sf::Event::KeyReleased)
     }
-}
-
-void App::Display() {
-    window.clear();
-
-    for (auto const& p : world.particles) {
-        if (p.isMarker) {
-            shape.setFillColor(sf::Color::Cyan);
-        } else
-            shape.setFillColor(sf::Color::White);
-        shape.setPosition(sf::Vector2f(p.pos.x - RADIUS, p.pos.y - RADIUS));
-        window.draw(shape);
-    }
-    window.draw(mStatisticsText);
-    window.display();
 }
 
 void App::FixedUpdate(sf::Time dt) {
     world.Step(dt.asSeconds());
+}
+
+void App::Render() {
+    window->clear();
+
+    for (auto const& p : world.particles) {
+        circleShape->setRadius(p.radius);
+        circleShape->setPosition(sf::Vector2f(p.pos.x - p.radius, p.pos.y - p.radius));
+        window->draw(*circleShape);
+    }
+
+    window->display();
+}
+
+void App::FillWorldWithCircles() {
+    for (int i = 0; i < App::CIRCLE_COUNT; i++) {
+        sf::Vector2f randPos(std::rand() % 1024, std::rand() % 768);
+        sf::Vector2f randVel = randPos / 2.0f;
+        float randMass = std::rand() % 50 + 5;
+        float randRadius = randMass;
+
+        Particle p(randPos, randVel, randMass, randRadius);
+        world.AddParticle(p);
+    }
+}
+
+App::~App() {
+    delete window;
+    delete circleShape;
 }
