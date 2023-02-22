@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 
 #include <list>
 
@@ -14,11 +14,11 @@ public:
     void Step(float dt);
 
 private:
-    static const float DRAG_COEFF;  // Сила сопротивления среды (для постепенного замедления объектов).
-    static const float RESTITUTION; // Коэффициент восстановления, меняется в пределах [0..1].
+    static const float DRAG_COEFF;  // РЎРёР»Р° СЃРѕРїСЂРѕС‚РёРІР»РµРЅРёСЏ СЃСЂРµРґС‹ (РґР»СЏ РїРѕСЃС‚РµРїРµРЅРЅРѕРіРѕ Р·Р°РјРµРґР»РµРЅРёСЏ РѕР±СЉРµРєС‚РѕРІ).
+    static const float RESTITUTION; // РљРѕСЌС„С„РёС†РёРµРЅС‚ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ, РјРµРЅСЏРµС‚СЃСЏ РІ РїСЂРµРґРµР»Р°С… [0..1].
 
     float width;
-    float height;                   // Размеры мира (для определения границ).
+    float height;                   // Р Р°Р·РјРµСЂС‹ РјРёСЂР° (РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ РіСЂР°РЅРёС†).
 
     std::list<Particle> particles;
 
