@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 
 #include "Particle.h"
 
@@ -13,10 +13,6 @@ Particle::Particle(sf::Vector2f pos, sf::Vector2f vel, float mass, float radius)
 
 Particle::Particle(float invMass) {
     this->invMass = invMass;
-}
-
-void Particle::SetPosition(sf::Vector2f pos) {
-    this->pos = pos;
 }
 
 void Particle::ApplyForce(sf::Vector2f force) {
