@@ -10,7 +10,7 @@ const sf::Color App::BACKGROUND_COLOR = sf::Color(235, 235, 235);
 const sf::Color App::CIRCLE_COLOR = sf::Color(0, 152, 156);
 
 App::App() :world(WIDTH, HEIGHT) {
-    window = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT), "Moving Circles");
+    window = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT), "Colliding Circles");
 
     circleShape = new sf::CircleShape();
     circleShape->setFillColor(CIRCLE_COLOR);
