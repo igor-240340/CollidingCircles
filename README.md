@@ -1,4 +1,4 @@
 # CollidingCircles
 
-Implementation of collision detection for circles.
+Test assignment on implementation of physically colliding circles.
 ![](docs/image.png)
